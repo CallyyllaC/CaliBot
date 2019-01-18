@@ -9,7 +9,7 @@ namespace BotLauncher
     {
         public static string OwnerGithub = "CallyyllaC";
         public static string BotRepo = "CaliBot";
-        public static string Ver = "CaliBot";
+        public static string Ver = "0.6";
 
         static void Main(string[] args)
         {

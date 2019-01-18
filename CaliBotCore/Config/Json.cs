@@ -29,5 +29,13 @@ namespace CaliBotCore.Config
             returnObject = JsonConvert.DeserializeObject<T>(jsonFile);
             return returnObject;
         }
+
+        //Creates an object from a string
+        public static T CreateObjectFromString<T>(string jsonFile)
+        {
+            T returnObject = default(T);
+            returnObject = JsonConvert.DeserializeObject<T>(jsonFile);
+            return returnObject;
+        }
     }
 }

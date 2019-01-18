@@ -26,9 +26,9 @@ namespace CaliBotCore
     class Program
     {
         //info
-        public static string OwnerGithub = "CallyyllaC";
-        public static string BotRepo = "CaliBot";
-        public static string Ver = "0.54";
+        public static string OwnerGithub = null;
+        public static string BotRepo = null;
+        public static string Ver = null;
         public static Bot Bot_Properties;
 
         //rootdir
@@ -39,7 +39,7 @@ namespace CaliBotCore
         public static uint CurrentColour = new Color(190, 0, 228).RawValue;
         public static string CurrentUrl = "";
         public static string ChangeLog = $"ChangeLog.txt";
-        public static string nepmote = "<a:TopNep:393785805845299200>";
+        public static string nepmote = null;
 
         //MyStuff
         public static string Token;
@@ -344,6 +344,11 @@ namespace CaliBotCore
             GoogleApi = configfile.googleApi;
             Botid = configfile.botid;
             OwnerID = configfile.ownerID;
+            OwnerGithub = configfile.OwnerGithub;
+            BotRepo = configfile.BotRepo;
+            Ver = Json.CreateObject<Ver>($"{Rootdir}\\Ver.json").version;
+            nepmote = configfile.nepmote;
+            Config.Config.Save();
 
             Bot_Properties = Updater.Load();
 
@@ -488,6 +493,42 @@ namespace CaliBotCore
             }
 
             //Check versions
+            var tmp = Json.CreateObject<Ver>($"{Rootdir}\\Ver.json");
+            string link = $"https://raw.githubusercontent.com/{OwnerGithub}/{BotRepo}/master/Ver.json";
+            using (var tmpclient = new System.Net.Http.HttpClient())
+            {
+                var content = Json.CreateObjectFromString<Ver>(tmpclient.GetStringAsync(link).Result);
+                if (double.Parse(tmp.version) < double.Parse(content.version))
+                {
+                    foreach (var item in Guilds)
+                    {
+                        try
+                        {
+                            var msg = Client.GetGuild(item.Value.Id).DefaultChannel.SendMessageAsync("", false, Embed.GetEmbed("**Bot Update**", $"An update has been detected!, I will be back once the update has completed!"));
+                        }
+                        catch (Exception exc)
+                        {
+                            Log.WriteToLog(exc);
+                        }
+                    }
+
+                    string url = $"https://github.com/{Program.OwnerGithub}/{Program.BotRepo}/releases/download/{content.version}/Release.zip";
+                    string path = $"Release.zip";
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                    using (var client = new System.Net.Http.HttpClient())
+                    {
+                        var contents = client.GetByteArrayAsync(url).Result;
+                        File.WriteAllBytes(path, contents);
+                    }
+
+                    Program.Ver = content.version;
+                    Config.Config.Save();
+                    Environment.Exit(60000);
+                }
+            }
 
             foreach (var item in Users.Values)
             {

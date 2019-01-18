@@ -314,7 +314,7 @@ namespace CaliBotCore.Commands
         {
             Program.nepmote = tmp.ToString();
             Config.Config.Save();
-            await ReplyAsync("", false, Embed.GetEmbed($"**Credits**", $"{input} credits have been removed from {IUser.Username}!"));
+            await ReplyAsync("", false, Embed.GetEmbed($"**Nep**", $"Changed!"));
         }
 
     }

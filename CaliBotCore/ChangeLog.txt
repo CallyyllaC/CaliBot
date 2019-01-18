@@ -52,6 +52,10 @@
 		Increased the size of returned user avatars so that they are no longer 128px
 	November
 		Added Waifu's (This is a beta feature, more features are to be added onto this in the future)
-		Finally fixed minor issues with antionstates display
+		Finally fixed minor issues with nationstates display
 		Added random waifu and search kitsu by id due to community demand
 		Fixed bug with kitsu responses not sending
+
+2019
+	January
+		Added automatic updating

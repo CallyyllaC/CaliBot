@@ -44,4 +44,9 @@ namespace CaliBotCore.DataStructures
         public ulong channelId = 0;
         public ulong messageId = 0;
     }
+    [Serializable]
+    class Ver
+    {
+        public string version = "";
+    }
 }
