@@ -1,0 +1,57 @@
+﻿2018
+	March
+		Lost hope in old bot
+		Total rewrite and basic port of core functionality
+	April
+		Added core Levelup and Profile system backends
+		Added font and colour to Profile and Levelup
+	May
+		Leaderboards added
+		Very basic music functionality implemented
+	June
+		Getting ready for private release
+		Added automatic updating
+		Leaderboards bug fixed
+		Leaderboards added currency ranking
+		Removed levelup tts
+		Reduced emoji reaction chance
+		Made it harder to levelup (linear)
+		Bot no longer reacts to just prefix messages
+		Added ability to upload and link music to play
+		Changed music so it displays name rather than file location
+		Added ability to change channel to post levelup messages
+		Blocked unauthorised guilds using music
+		Music now uses tag name rather than filename if possible
+		Music posts tracks file tags
+		Ported over mariage system
+		Enabled optimisation of levelup image
+		Fixed level up image being optimised twice under certain conditions
+		Fixed issue not converting hex to uint colour
+		Reduced size of levelup images
+		Ability to toggle bot activity features in guild
+		Added nep counter
+		Ported info section, getting user, emote, guild data, etc.
+		Ported birthday command because it's someones special day tomorrow :)
+		Ported delete commands
+		Appreciate Resuhai is back!
+		Admin command to add and remove rainbow
+		Ported reminder function
+		fixed a bug (maybe) causing bot to crash sometimes when leveling up <-- didnt work 100%
+		fixed the crash bug
+		fixed bug not sending levelup image
+	July
+
+	August
+		Fixed Nep function
+		NationStates is back!
+	September
+		Fixed bugs with code
+		Added jail
+	October
+		Ported over ddg and google searching
+		Increased the size of returned user avatars so that they are no longer 128px
+	November
+		Added Waifu's (This is a beta feature, more features are to be added onto this in the future)
+		Finally fixed minor issues with antionstates display
+		Added random waifu and search kitsu by id due to community demand
+		Fixed bug with kitsu responses not sending
