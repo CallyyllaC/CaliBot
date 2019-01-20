@@ -310,9 +310,11 @@ namespace CaliBotCore.Commands
 
         [Command("Nep", RunMode = RunMode.Async), Summary("Change Nepmoji")]
         [RequireOwner]
-        public async Task Nep(IEmote tmp)
+        public async Task Nep(string input)
         {
-            Program.nepmote = tmp.ToString();
+
+            Emote emote = Emote.Parse(input);
+            Program.nepmote = emote.ToString();
             Config.Config.Save();
             await ReplyAsync("", false, Embed.GetEmbed($"**Nep**", $"Changed!"));
         }

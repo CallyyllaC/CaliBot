@@ -59,3 +59,5 @@
 2019
 	January
 		Added automatic updating
+		Added ability to change font size
+		Profile now uses nickname over username

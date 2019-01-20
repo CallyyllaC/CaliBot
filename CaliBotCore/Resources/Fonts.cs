@@ -11,7 +11,7 @@ namespace CaliBotCore.Resources
     public class MyFonts
     {
         public FontCollection Fonts = new FontCollection();
-
+        
         public MyFonts()
         {
             foreach (var item in Directory.GetFiles($"{Program.Rootdir}\\Resources\\Fonts\\", "*.ttf"))

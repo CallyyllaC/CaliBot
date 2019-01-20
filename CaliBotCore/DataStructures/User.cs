@@ -26,6 +26,7 @@ namespace CaliBotCore.DataStructures
 
         //image stuff
         public string font = null;
+        public float fontMultiplier = 1;
         public string hexcol = "#000000";
         public bool changed = false;
 

@@ -23,9 +23,13 @@ namespace CaliBotCore.Images
         private static int level = 0;
         private static int xp = 0;
         private static string hexcol = null;
+        private static float fontMultiplier = 1;
 
         public static async Task<byte[]> GetProfile(User user, string username, byte[] avatar)
         {
+            //get multiplier
+            fontMultiplier = user.fontMultiplier;
+
             //Get font
             await GetProperties(user);
             
@@ -61,7 +65,7 @@ namespace CaliBotCore.Images
                 PointF Point2 = new PointF(10, 380);
                 PointF Point3 = new PointF(10, 410);
                 PointF Point4 = new PointF(10, 440);
-                Font font = new Font(fam, 25);
+                Font font = new Font(fam, 25*fontMultiplier);
                 using (var tmpimg = Image.Load(Avatar))
                 {
                     tmpimg.Mutate(y => y.Resize(175, 175));
@@ -85,7 +89,7 @@ namespace CaliBotCore.Images
             using (var overlay = Image.Load($"{Program.Rootdir}\\Config\\Sample.png"))
             {
                 PointF Point1 = new PointF(10, 10);
-                Font font2 = new Font(fam, 72);
+                Font font2 = new Font(fam, 72*fontMultiplier);
                 overlay.Mutate(x => x
                     .DrawText("Sample Text", font2, Rgba32.FromHex("#000000"), Point1)
                 );

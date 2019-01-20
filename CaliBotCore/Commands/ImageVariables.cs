@@ -12,6 +12,26 @@ namespace CaliBotCore.Commands
 {
     public class ImageVariables : InteractiveBase
     {
+        [Command("GetMultiplier", RunMode = RunMode.Async)]
+        [Summary("Get font multiplier")]
+        public async Task MyMultiplier()
+        {
+            IUser user = Context.Message.Author;
+            await ReplyAsync("", false, Embed.GetEmbed($"**Get Multiplier**", $"{ Program.Users.GetValueOrDefault(user.Id).fontMultiplier}", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
+        }
+
+        [Command("SetMultiplier", RunMode = RunMode.Async)]
+        [Summary("Set font multiplier")]
+        public async Task Multiplier(float multi)
+        {
+            IUser user = Context.Message.Author;
+            var myuser = Program.Users.GetValueOrDefault(user.Id);
+            myuser.fontMultiplier = multi;
+            myuser.changed = true;
+            await Program.EditUser(myuser);
+            await ReplyAsync("", false, Embed.GetEmbed($"**Set Multiplier**", "Done!", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
+        }
+
         [Command("GetColour", RunMode = RunMode.Async)]
         [Summary("Get colour of font")]
         public async Task MyColour()
@@ -42,7 +62,7 @@ namespace CaliBotCore.Commands
             await ReplyAndDeleteAsync("", false, Embed.GetEmbed($"**Set Colour**", $"Done!", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl), new TimeSpan(0, 0, 30));
 
         }
-
+        
         [Command("GetFont", RunMode = RunMode.Async)]
         [Summary("Get font")]
         public async Task MyFont()

@@ -28,7 +28,6 @@ namespace CaliBotCore
         //info
         public static string OwnerGithub = null;
         public static string BotRepo = null;
-        public static string Ver = null;
         public static Bot Bot_Properties;
 
         //rootdir
@@ -89,13 +88,14 @@ namespace CaliBotCore
             Client.Log += Log.WriteToLog;
 
             Commands = new CommandService();
+            var Interactive = new InteractiveService(Client); 
             Voice = new AudioService();
 
             Services = new ServiceCollection()
                 .AddSingleton(Client)
-                .AddSingleton<InteractiveService>()
                 .AddSingleton(Voice)
                 .AddSingleton(Commands)
+                .AddSingleton(Interactive)
                 .BuildServiceProvider();
             await Client.LoginAsync(TokenType.Bot, Token);
             await Client.StartAsync();
@@ -107,6 +107,7 @@ namespace CaliBotCore
             Client.GuildUpdated += Client_GuildUpdated;
 
             Client.UserLeft += Client_UserLeft;
+            Client.UserUpdated += Client_UserUpdated;
             Client.UserJoined += Client_UserJoined;
 
             Client.RecipientAdded += Client_RecipientAdded;
@@ -116,6 +117,7 @@ namespace CaliBotCore
 
             await Task.Delay(-1);
         }
+
 
         private async Task Client_MessageReceived(SocketMessage arg)
         {
@@ -233,6 +235,20 @@ namespace CaliBotCore
 
             await Task.CompletedTask;
         }
+        private async Task Client_UserUpdated(SocketUser arg1, SocketUser arg2)
+        {
+            var tmp1 = arg1 as IGuildUser;
+            var tmp2 = arg2 as IGuildUser;
+
+            if (tmp1.Nickname != tmp2.Nickname)
+            {
+                var user = Users.GetValueOrDefault(arg1.Id);
+                user.changed = true;
+                await EditUser(user);
+            }
+
+            await Task.CompletedTask;
+        }
 
         private async Task Client_GuildAvailable(SocketGuild arg)
         {
@@ -346,7 +362,6 @@ namespace CaliBotCore
             OwnerID = configfile.ownerID;
             OwnerGithub = configfile.OwnerGithub;
             BotRepo = configfile.BotRepo;
-            Ver = Json.CreateObject<Ver>($"{Rootdir}\\Ver.json").version;
             nepmote = configfile.nepmote;
             Config.Config.Save();
 
@@ -523,9 +538,9 @@ namespace CaliBotCore
                         var contents = client.GetByteArrayAsync(url).Result;
                         File.WriteAllBytes(path, contents);
                     }
+                    
+                    Json.CreateJson("Ver", $"{Rootdir}", new Ver() { version = content.version });
 
-                    Program.Ver = content.version;
-                    Config.Config.Save();
                     Environment.Exit(60000);
                 }
             }

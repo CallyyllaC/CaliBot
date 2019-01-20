@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CaliBotCore.DataStructures;
 using System.Linq;
 using CaliBotCore.Images;
+using CaliBotCore.Config;
 
 namespace CaliBotCore.Commands
 {
@@ -50,8 +51,7 @@ namespace CaliBotCore.Commands
             Program.Bot_Properties.messageId = message.Id;
             Updater.Save(Program.Bot_Properties);
 
-            Program.Ver = LatestVersion;
-            Config.Config.Save();
+            Json.CreateJson("Ver", $"{Program.Rootdir}", new Ver() { version = LatestVersion });
 
             await message.ModifyAsync(x => x.Embed = Embed.GetEmbed("**Bot Update**", $"There we go, brb!"));
             Environment.Exit(60001);

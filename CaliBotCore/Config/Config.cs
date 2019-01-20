@@ -14,7 +14,7 @@ namespace CaliBotCore.Config
         //Make sure all the directories and files are here
         public static void Save()
         {
-            Configfile newconfig = new Configfile() { botid = Program.Botid, googleApi = Program.GoogleApi, ownerID = Program.OwnerID, token = Program.Token, nepmote = Program.nepmote, OwnerGithub = Program.OwnerGithub, BotRepo = Program.BotRepo, Ver = Program.Ver };
+            Configfile newconfig = new Configfile() { botid = Program.Botid, googleApi = Program.GoogleApi, ownerID = Program.OwnerID, token = Program.Token, nepmote = Program.nepmote, OwnerGithub = Program.OwnerGithub, BotRepo = Program.BotRepo };
             Json.CreateJson("config", $"{Program.Rootdir}\\Config", newconfig);
         }
 
@@ -72,7 +72,6 @@ namespace CaliBotCore.Config
     {
         public string OwnerGithub = "CallyyllaC";
         public string BotRepo = "CaliBot";
-        public string Ver = "CaliBot";
         public string token = "null";
         public string googleApi = "null";
         public ulong botid = 0;

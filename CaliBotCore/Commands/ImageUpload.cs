@@ -239,11 +239,11 @@ namespace CaliBotCore.Commands
 
         [Command("GetProfile", RunMode = RunMode.Async)]
         [Summary("Get current Profile image"), Alias("Profile", "MyProfile")]
-        public async Task GetProfile(SocketUser UserTag = null)
+        public async Task GetProfile(IGuildUser UserTag = null)
         {
             if (UserTag == null)
             {
-                UserTag = Context.Message.Author as SocketUser;
+                UserTag = Context.Message.Author as IGuildUser;
             }
 
             var tmp = await ReplyAsync("", false, Embed.GetEmbed("Profile", "Working..."));
@@ -257,7 +257,8 @@ namespace CaliBotCore.Commands
             try
             {
                 var avatar = await GetFromWeb.PullImageFromWebAsync(UserTag.GetAvatarUrl());
-                var tmpimg = await Profile.GetProfile(Program.Users.GetValueOrDefault(UserTag.Id), UserTag.Username, avatar);
+                string name = UserTag.Nickname ?? UserTag.Username;
+                var tmpimg = await Profile.GetProfile(Program.Users.GetValueOrDefault(UserTag.Id), name, avatar);
 
                 if (tmpimg.Length > 8000000)
                 {

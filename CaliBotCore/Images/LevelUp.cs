@@ -21,11 +21,15 @@ namespace CaliBotCore.Images
         private static byte[] outputArray = null;
         private static FontFamily font = null;
         private static string hex = null;
+        private static float fontMultiplier = 1;
 
         public static async Task<byte[]> MakeLevelAsync(ulong id)
         {
             //get location of image
             location = $"{Program.Rootdir}\\Users\\LevelUp\\{id}.gif";
+
+            //get multiplier
+            fontMultiplier = Program.Users.GetValueOrDefault(id).fontMultiplier;
 
             //load font
             await GetFont(id);
@@ -97,7 +101,7 @@ namespace CaliBotCore.Images
             using (var image = Image.Load(outputArray))
             {
                 PointF Point1 = new PointF(50, 60);
-                var thefont = new Font(font, 120);
+                var thefont = new Font(font, 120*fontMultiplier);
                 image.Mutate(x => x.DrawText("Level Up", thefont, Rgba32.FromHex(hex), Point1));
 
                 image.SaveAsGif(stream);

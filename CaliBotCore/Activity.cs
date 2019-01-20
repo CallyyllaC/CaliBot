@@ -13,6 +13,7 @@ namespace CaliBotCore
         DiscordSocketClient client;
         private static readonly Timer gametimer = new Timer();
         private Random random = new Random();
+
         public Activity(DiscordSocketClient Client)
         {
             client = Client;
