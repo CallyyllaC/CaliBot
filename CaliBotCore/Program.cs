@@ -519,13 +519,24 @@ namespace CaliBotCore
                     {
                         try
                         {
-                            var msg = Client.GetGuild(item.Value.Id).DefaultChannel.SendMessageAsync("", false, Embed.GetEmbed("**Bot Update**", $"An update has been detected!, I will be back once the update has completed!"));
+                            ulong chanid = 0;
+                            if (item.Value.LevelupChannel !=0 )
+                            {
+                                chanid = item.Value.LevelupChannel;
+                            }
+                            else
+                            {
+                                chanid = Client.GetGuild(item.Value.Id).DefaultChannel.Id;
+                            }
+                            var msg = Client.GetGuild(item.Value.Id).GetTextChannel(chanid).SendMessageAsync("", false, Embed.GetEmbed("**Bot Update**", $"An update has been detected!, I will be back once the update has completed!"));
                         }
                         catch (Exception exc)
                         {
                             Log.WriteToLog(exc);
                         }
                     }
+
+                    Json.CreateJson("Ver", $"{Rootdir}", new Ver() { version = content.version });
 
                     string url = $"https://github.com/{Program.OwnerGithub}/{Program.BotRepo}/releases/download/{content.version}/Release.zip";
                     string path = $"Release.zip";
@@ -539,7 +550,6 @@ namespace CaliBotCore
                         File.WriteAllBytes(path, contents);
                     }
                     
-                    Json.CreateJson("Ver", $"{Rootdir}", new Ver() { version = content.version });
 
                     Environment.Exit(60000);
                 }

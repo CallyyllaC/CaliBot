@@ -61,3 +61,5 @@
 		Added automatic updating
 		Added ability to change font size
 		Profile now uses nickname over username
+		Fixed auto update notification not posting
+		Fixed infinite updating
