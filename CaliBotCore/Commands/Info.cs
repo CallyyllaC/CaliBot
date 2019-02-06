@@ -22,7 +22,7 @@ namespace CaliBotCore.Commands
             {
                 output = $"{output}\n{item.Username} : {item.Id}\n";
             }
-            foreach (var item in Embed.GetEmbeds($"**User ID's**", output, Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl))
+            foreach (var item in Embed.GetEmbeds($"**User ID's**", output, await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl))
             {
                 await chn.SendMessageAsync("", false, item);
             }
@@ -33,7 +33,7 @@ namespace CaliBotCore.Commands
         public async Task Avatar(IUser newuser = null)
         {
             var user = newuser ?? Context.Message.Author;
-            var embed = Embed.GetEmbed($"**{user.Username}'s Avatar**", "", Program.CurrentColour, Program.CurrentName, Program.CurrentUrl, user.GetAvatarUrl(ImageFormat.Auto,2048));
+            var embed = Embed.GetEmbed($"**{user.Username}'s Avatar**", "", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Program.CurrentUrl, user.GetAvatarUrl(ImageFormat.Auto,2048));
             await ReplyAsync("", false, embed);
         }
 
@@ -50,7 +50,7 @@ namespace CaliBotCore.Commands
             {
                 tmp = $"{tmp} {item}";
             }
-            foreach (var item in Embed.GetEmbeds($"**User ID's**", tmp, Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl))
+            foreach (var item in Embed.GetEmbeds($"**User ID's**", tmp, await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl))
             {
                 await ReplyAsync("", false, item);
             }
@@ -67,7 +67,7 @@ namespace CaliBotCore.Commands
         [Alias("roleinfo")]
         public async Task Role(IRole role)
         {
-            await ReplyAsync("", false, Embed.GetEmbed($"**{role.Name}'s Info**", $"Name: {role.Name} \nCurrent colour: {role.Color} \nCreated: {role.CreatedAt} \nRole ID: {role.Id} \nIs seperated: {role.IsHoisted} \nIs mentionable: {role.IsMentionable} \nPosition: {role.Position}", Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{role.Name}'s Info**", $"Name: {role.Name} \nCurrent colour: {role.Color} \nCreated: {role.CreatedAt} \nRole ID: {role.Id} \nIs seperated: {role.IsHoisted} \nIs mentionable: {role.IsMentionable} \nPosition: {role.Position}", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl));
         }
 
         [Command("listroles"), Summary("List all roles")]
@@ -82,7 +82,7 @@ namespace CaliBotCore.Commands
                 roleCollection.Add(tmp);
             }
 
-            await ReplyAsync("", false, Embed.GetEmbed($"**{Context.Guild.Name}'s Roles**", String.Join(String.Empty, roleCollection.ToArray()), Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{Context.Guild.Name}'s Roles**", String.Join(String.Empty, roleCollection.ToArray()), await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl));
         }
 
         [Command("uid"), Summary("Get id of user")]
@@ -90,7 +90,7 @@ namespace CaliBotCore.Commands
         public async Task Getid(IUser newuser = null)
         {
             var user = newuser ?? Context.Message.Author;
-            await ReplyAsync("", false, Embed.GetEmbed($"**{user.Username}**", user.Id.ToString(), Program.CurrentColour, Program.CurrentName, user.GetAvatarUrl(ImageFormat.Auto, 2048)));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{user.Username}**", user.Id.ToString(), await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, user.GetAvatarUrl(ImageFormat.Auto, 2048)));
         }
 
         [Command("idu"), Summary("Get user from id")]
@@ -98,7 +98,7 @@ namespace CaliBotCore.Commands
         public async Task Getuser(ulong id)
         {
             var user = Context.Guild.GetUser(id);
-            await ReplyAsync("", false, Embed.GetEmbed($"**{user.Nickname}**", $"{user.Username}{user.Discriminator}", Program.CurrentColour, Program.CurrentName, user.GetAvatarUrl(ImageFormat.Auto, 2048)));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{user.Nickname}**", $"{user.Username}{user.Discriminator}", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, user.GetAvatarUrl(ImageFormat.Auto, 2048)));
         }
 
         [Command("channel"), Summary("Get channel info")]
@@ -106,7 +106,7 @@ namespace CaliBotCore.Commands
         public async Task ChannelInfo(ITextChannel channel = null)
         {
             if (channel == null) { channel = Context.Channel as ITextChannel; }
-            await ReplyAsync("", false, Embed.GetEmbed($"**{channel.Name}'s Info**", $"**Displaying information about {channel.Name}**\n**Channel ID:** {channel.Id} \n**Created:** {channel.CreatedAt} \n**Is NSFW:** {channel.IsNsfw}", Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{channel.Name}'s Info**", $"**Displaying information about {channel.Name}**\n**Channel ID:** {channel.Id} \n**Created:** {channel.CreatedAt} \n**Is NSFW:** {channel.IsNsfw}", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl));
         }
 
         [Command("user"), Summary("Get user info")]
@@ -124,7 +124,7 @@ namespace CaliBotCore.Commands
             }
             catch { }
 
-            await ReplyAsync("", false, Embed.GetEmbed($"**{userInfo.Username}**", $"**Displaying information about {userInfo.Mention}** \n**Username:** {userInfo.Username} \n**User ID:** {userInfo.Id} \n**Users current status:** {userInfo.Status} \n**User is currently {playingtype.ToLower()}:**  {playing} \n**User account was created:** {userInfo.CreatedAt} \n**Is user a bot:** {userInfo.IsBot} \n", Program.CurrentColour, Program.CurrentName, userInfo.GetAvatarUrl(ImageFormat.Auto, 2048)));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{userInfo.Username}**", $"**Displaying information about {userInfo.Mention}** \n**Username:** {userInfo.Username} \n**User ID:** {userInfo.Id} \n**Users current status:** {userInfo.Status} \n**User is currently {playingtype.ToLower()}:**  {playing} \n**User account was created:** {userInfo.CreatedAt} \n**Is user a bot:** {userInfo.IsBot} \n", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, userInfo.GetAvatarUrl(ImageFormat.Auto, 2048)));
         }
 
         [Command("serverinfo"), Summary("Get server info")]
@@ -136,7 +136,7 @@ namespace CaliBotCore.Commands
             try { name = userInfo.AFKChannel.Name; }
             catch { }
 
-            await ReplyAsync("", false, Embed.GetEmbed($"**{userInfo.Name}'s Info**", $"**Server Name: {userInfo.Name} **\n**Server ID:** {userInfo.Id} \n**Server was created:** {userInfo.CreatedAt} \n**Current voice region:** {userInfo.VoiceRegionId} \n**Afk Channel:** {name} **with timeout:** {userInfo.AFKTimeout} \n**Features:**\n {string.Join("\n", userInfo.Features)} \n**Emotes:**\n {string.Join(", ", userInfo.Emotes)} \n**Roles:**\n {string.Join("\n", userInfo.Roles).Replace(@"@everyone", @"Everyone (Default Role)")}", Program.CurrentColour, Program.CurrentName, Context.Guild.IconUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**{userInfo.Name}'s Info**", $"**Server Name: {userInfo.Name} **\n**Server ID:** {userInfo.Id} \n**Server was created:** {userInfo.CreatedAt} \n**Current voice region:** {userInfo.VoiceRegionId} \n**Afk Channel:** {name} **with timeout:** {userInfo.AFKTimeout} \n**Features:**\n {string.Join("\n", userInfo.Features)} \n**Emotes:**\n {string.Join(", ", userInfo.Emotes)} \n**Roles:**\n {string.Join("\n", userInfo.Roles).Replace(@"@everyone", @"Everyone (Default Role)")}", await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Context.Guild.IconUrl));
         }
 
         [Command("CalcLevel"), Summary("Calculate level that xp will give")]
@@ -145,7 +145,7 @@ namespace CaliBotCore.Commands
             double xp = TotalXP;
             double levelish = (Math.Sqrt(xp)) / 2;
             int level = int.Parse(Math.Floor(levelish).ToString());
-            await ReplyAsync("", false, Embed.GetEmbed($"**Calc Level**", level.ToString(), Program.CurrentColour, Program.CurrentName, Program.CurrentUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**Calc Level**", level.ToString(), await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Program.CurrentUrl));
         }
 
         [Command("CalcXP"), Summary("Calculate xp that level requires")]
@@ -153,7 +153,14 @@ namespace CaliBotCore.Commands
         {
             var tmp = Totallevel * 2;
             tmp = tmp * tmp;
-            await ReplyAsync("", false, Embed.GetEmbed($"**Calc XP**", tmp.ToString(), Program.CurrentColour, Program.CurrentName, Program.CurrentUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**Calc XP**", tmp.ToString(), await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Program.CurrentUrl));
+        }
+
+        [Command("Credits"), Summary("Returns current users credits")]
+        public async Task Credits()
+        {
+            var tmp = Program.Users.GetValueOrDefault(Context.Message.Author.Id).currency;
+            await ReplyAsync("", false, Embed.GetEmbed($"**Credits**", tmp.ToString(), await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, Program.CurrentUrl));
         }
     }
 }

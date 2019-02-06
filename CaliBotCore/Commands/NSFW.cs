@@ -33,7 +33,7 @@ namespace CaliBotCore.Commands
                 await Program.SaveUser(Context.Message.Author.Id);
             }
 
-            await ReplyAsync($"http://gelbooru.com/index.php?page=post&s=view&id={tmp.Id}", false, Embed.GetEmbed($"**Gelbooru**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", Program.CurrentColour, tmp.Id.ToString(), null, tmp.FileUrl));
+            await ReplyAsync($"http://gelbooru.com/index.php?page=post&s=view&id={tmp.Id}", false, Embed.GetEmbed($"**Gelbooru**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", await Program.GetUserColour(Context.Message.Author.Id), tmp.Id.ToString(), null, tmp.FileUrl));
         }
 
         [Command("Yan")]
@@ -59,7 +59,7 @@ namespace CaliBotCore.Commands
                 await Program.SaveUser(Context.Message.Author.Id);
             }
 
-            await ReplyAsync("", false, Embed.GetEmbed($"**Yande.re**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", Program.CurrentColour, tmp.Id.ToString(), null, tmp.FileUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**Yande.re**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", await Program.GetUserColour(Context.Message.Author.Id), tmp.Id.ToString(), null, tmp.FileUrl));
         }
 
         [Command("NSFW")]
@@ -75,7 +75,7 @@ namespace CaliBotCore.Commands
             var tmp = await NotSafeForWork.GetYanImageAsync(input);
             if (tmp != null)
             {
-                await ReplyAsync("", false, Embed.GetEmbed($"**Yande.re**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", Program.CurrentColour, tmp.Id.ToString(), null, tmp.FileUrl));
+                await ReplyAsync("", false, Embed.GetEmbed($"**Yande.re**", $"Tags: {tmp.Tags}\nRating: {tmp.Rating}\nScore: {tmp.Score}", await Program.GetUserColour(Context.Message.Author.Id), tmp.Id.ToString(), null, tmp.FileUrl));
             }
             else
             {
@@ -92,7 +92,7 @@ namespace CaliBotCore.Commands
                 await ReplyAsync("", false, Embed.GetEmbed("**Oops something went wrong**", "Could not find any results for this tag"));
                 return;
             }
-            await ReplyAsync("", false, Embed.GetEmbed($"**Gelbooru**", $"Tags: {tmp2.Tags}\nRating: {tmp2.Rating}\nScore: {tmp2.Score}", Program.CurrentColour, tmp2.Id.ToString(), null, tmp2.FileUrl));
+            await ReplyAsync("", false, Embed.GetEmbed($"**Gelbooru**", $"Tags: {tmp2.Tags}\nRating: {tmp2.Rating}\nScore: {tmp2.Score}", await Program.GetUserColour(Context.Message.Author.Id), tmp2.Id.ToString(), null, tmp2.FileUrl));
         }
     }
 }

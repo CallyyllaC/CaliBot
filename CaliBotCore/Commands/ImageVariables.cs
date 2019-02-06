@@ -12,26 +12,6 @@ namespace CaliBotCore.Commands
 {
     public class ImageVariables : InteractiveBase
     {
-        [Command("GetMultiplier", RunMode = RunMode.Async)]
-        [Summary("Get font multiplier")]
-        public async Task MyMultiplier()
-        {
-            IUser user = Context.Message.Author;
-            await ReplyAsync("", false, Embed.GetEmbed($"**Get Multiplier**", $"{ Program.Users.GetValueOrDefault(user.Id).fontMultiplier}", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
-        }
-
-        [Command("SetMultiplier", RunMode = RunMode.Async)]
-        [Summary("Set font multiplier")]
-        public async Task Multiplier(float multi)
-        {
-            IUser user = Context.Message.Author;
-            var myuser = Program.Users.GetValueOrDefault(user.Id);
-            myuser.fontMultiplier = multi;
-            myuser.changed = true;
-            await Program.EditUser(myuser);
-            await ReplyAsync("", false, Embed.GetEmbed($"**Set Multiplier**", "Done!", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
-        }
-
         [Command("GetColour", RunMode = RunMode.Async)]
         [Summary("Get colour of font")]
         public async Task MyColour()
@@ -113,7 +93,8 @@ namespace CaliBotCore.Commands
             await ReplyAndDeleteAsync("", false, Embed.GetEmbed($"**Set Font**", $"Done!", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl), new TimeSpan(0, 0, 30));
         }
 
-        [Command("SampleFonts", RunMode = RunMode.Async), Summary("Post samples of installed fonts")]
+        [Command("SampleFonts", RunMode = RunMode.Async)]
+        [Summary("Post samples of installed fonts")]
         public async Task SampleFonts()
         {
             foreach (var item in Program.Myfonts.Fonts.Families)
@@ -128,6 +109,34 @@ namespace CaliBotCore.Commands
                     await Context.Channel.SendFileAsync($"{Program.Rootdir}\\Resources\\Fonts\\{item.Name}.png", item.Name);
                 }
             }
+        }
+        
+        [Command("GetMulti", RunMode = RunMode.Async)]
+        [Summary("Get font multiplier")]
+        public async Task MyMulti()
+        {
+            IUser user = Context.Message.Author;
+            await ReplyAsync("", false, Embed.GetEmbed($"**Get Multiplier**", $"{ Program.Users.GetValueOrDefault(user.Id).fontMultiplier}", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
+        }
+
+        [Command("SetMulti", RunMode = RunMode.Async)]
+        [Summary("Set font multiplier")]
+        public async Task Multi(string multi)
+        {
+            IUser user = Context.Message.Author;
+            var myuser = Program.Users.GetValueOrDefault(user.Id);
+            try
+            {
+                myuser.fontMultiplier = float.Parse(multi);
+            }
+            catch (Exception)
+            {
+                await ReplyAsync("", false, Embed.GetEmbed($"**Error!**", "Could not convert input to float", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
+                return;
+            }
+            myuser.changed = true;
+            await Program.EditUser(myuser);
+            await ReplyAsync("", false, Embed.GetEmbed($"**Set Multiplier**", "Done!", await Program.GetUserColour(user.Id), Program.CurrentName, Program.CurrentUrl));
         }
     }
 }

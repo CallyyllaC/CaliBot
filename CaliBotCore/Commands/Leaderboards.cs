@@ -96,7 +96,7 @@ namespace CaliBotCore.Commands
             {
                 var tmp = await Ranks.GetGlobal();
 
-                var pages = new PaginatedMessage() { Pages = GroupOf10XP(Context, tmp), Title = "Global XP Leaderboard", Color = new Color(Program.CurrentColour), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
+                var pages = new PaginatedMessage() { Pages = GroupOf10XP(Context, tmp), Title = "Global XP Leaderboard", Color = new Color(await Program.GetUserColour(Context.Message.Author.Id)), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
                 pages.Options.DisplayInformationIcon = false;
                 await PagedReplyAsync(pages, false);
             }
@@ -106,7 +106,7 @@ namespace CaliBotCore.Commands
             {
                 var tmp = await Ranks.GetLocal(Context.Guild);
 
-                var pages = new PaginatedMessage() { Pages = GroupOf10XP(Context, tmp), Title = "Local XP Leaderboard", Color = new Color(Program.CurrentColour), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
+                var pages = new PaginatedMessage() { Pages = GroupOf10XP(Context, tmp), Title = "Local XP Leaderboard", Color = new Color(await Program.GetUserColour(Context.Message.Author.Id)), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
                 pages.Options.DisplayInformationIcon = false;
                 await PagedReplyAsync(pages, false);
             }
@@ -116,7 +116,7 @@ namespace CaliBotCore.Commands
             {
                 var tmp = await Ranks.GetGlobalDosh();
 
-                var pages = new PaginatedMessage() { Pages = GroupOf10Dosh(Context, tmp), Title = "Global Credits Leaderboard", Color = new Color(Program.CurrentColour), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
+                var pages = new PaginatedMessage() { Pages = GroupOf10Dosh(Context, tmp), Title = "Global Credits Leaderboard", Color = new Color(await Program.GetUserColour(Context.Message.Author.Id)), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
                 pages.Options.DisplayInformationIcon = false;
                 await PagedReplyAsync(pages, false);
             }
@@ -126,7 +126,7 @@ namespace CaliBotCore.Commands
             {
                 var tmp = await Ranks.GetLocalDosh(Context.Guild);
 
-                var pages = new PaginatedMessage() { Pages = GroupOf10Dosh(Context, tmp), Title = "Local Credits Leaderboard", Color = new Color(Program.CurrentColour), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
+                var pages = new PaginatedMessage() { Pages = GroupOf10Dosh(Context, tmp), Title = "Local Credits Leaderboard", Color = new Color(await Program.GetUserColour(Context.Message.Author.Id)), Options = new PaginatedAppearanceOptions { DisplayInformationIcon = false, JumpDisplayOptions = JumpDisplayOptions.Never } };
                 pages.Options.DisplayInformationIcon = false;
                 await PagedReplyAsync(pages, false);
             }
@@ -143,7 +143,7 @@ namespace CaliBotCore.Commands
                 try
                 {
                     var emote = GuildEmote.Parse(Program.nepmote).Url;
-                    await ReplyAsync("", false, Embed.GetEmbed("Neps!", $"The current ammount of neps in this server is {counter}, the current amount of neps overall is {Program.Guilds.GetValueOrDefault(Context.Guild.Id).Nep}", Program.CurrentColour, "Nep Nep", emote));
+                    await ReplyAsync("", false, Embed.GetEmbed("Neps!", $"The current ammount of neps in this server is {counter}, the current amount of neps overall is {Program.Guilds.GetValueOrDefault(Context.Guild.Id).Nep}", await Program.GetUserColour(Context.Message.Author.Id), "Nep Nep", emote));
                 }
                 catch
                 {

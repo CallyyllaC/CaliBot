@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
 
 namespace CaliBotCore.Commands
 {
@@ -58,7 +59,7 @@ namespace CaliBotCore.Commands
         {
             if (Context.Message.Attachments.Count > 0)
             {
-                await UploadLevelUp(ResizeMode);
+                await UploadLevelUp(ImageLink);
                 return;
             }
 
@@ -106,19 +107,19 @@ namespace CaliBotCore.Commands
                 switch (ResizeMode.ToLower())
                 {
                     case "stretch":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
                         break;
 
                     case "pad":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizePadAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizePadAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
                         break;
 
                     case "crop":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeCropAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeCropAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
                         break;
 
                     default:
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(Context.Message.Attachments.First().ProxyUrl), 1200, 480));
                         break;
                 }
             }
@@ -138,7 +139,7 @@ namespace CaliBotCore.Commands
         {
             if (Context.Message.Attachments.Count > 0)
             {
-                await UploadProfile(ResizeMode);
+                await UploadProfile(ImageLink);
                 return;
             }
 
@@ -148,19 +149,19 @@ namespace CaliBotCore.Commands
                 switch (ResizeMode.ToLower())
                 {
                     case "stretch":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
                         break;
 
                     case "pad":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizePadAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizePadAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
                         break;
 
                     case "crop":
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeCropAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeCropAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
                         break;
 
                     default:
-                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.png", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
+                        await File.WriteAllBytesAsync($"{Program.Rootdir}\\Users\\Profile\\{Context.Message.Author.Id}.gif", await Resize.ImageResizeStretchAsync(await GetFromWeb.PullImageFromWebAsync(ImageLink), 1200, 480));
                         break;
                 }
             }
@@ -248,7 +249,7 @@ namespace CaliBotCore.Commands
 
             var tmp = await ReplyAsync("", false, Embed.GetEmbed("Profile", "Working..."));
 
-            if (!File.Exists($"{Program.Rootdir}\\Users\\Profile\\{UserTag.Id}.png"))
+            if (!File.Exists($"{Program.Rootdir}\\Users\\Profile\\{UserTag.Id}.gif"))
             {
                 await tmp.ModifyAsync(x => x.Embed = Embed.GetEmbed("Profile", "You havn't uploaded a profile image yet"));
                 return;
@@ -273,9 +274,9 @@ namespace CaliBotCore.Commands
                     File.Delete(file);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                await tmp.ModifyAsync(x => x.Embed = Embed.GetEmbed("Get Profile", "Sorry there was an error"));
+                await tmp.ModifyAsync(x => x.Embed = Embed.GetEmbed("Get Profile", e.Message));
                 GC.Collect();
                 return;
             }

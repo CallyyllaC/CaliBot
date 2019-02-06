@@ -132,7 +132,7 @@ namespace CaliBotCore.Commands
             chn = await user.GetOrCreateDMChannelAsync();
 
             await chn.SendMessageAsync(MessageContents);
-            var embed = Embed.GetEmbed($"**Sent to {user.Username}**", MessageContents, Program.CurrentColour, Program.CurrentName, user.GetAvatarUrl());
+            var embed = Embed.GetEmbed($"**Sent to {user.Username}**", MessageContents, await Program.GetUserColour(Context.Message.Author.Id), Program.CurrentName, user.GetAvatarUrl());
             await ReplyAsync("", false, embed);
 
             if (Context.Message.Attachments.Count > 0)
@@ -253,7 +253,14 @@ namespace CaliBotCore.Commands
             }
             Program.jail.Add(user);
 
-            await Context.Channel.SendFileAsync($"{Program.Rootdir}\\Resources\\GotoJail.jpg", $"{user.Mention} you are now in jail for {hours} hours");
+            if (hours == 1)
+            {
+                await Context.Channel.SendFileAsync($"{Program.Rootdir}\\Resources\\GotoJail.jpg", $"{user.Mention} you are now in jail for 1 hour");
+            }
+            else
+            {
+                await Context.Channel.SendFileAsync($"{Program.Rootdir}\\Resources\\GotoJail.jpg", $"{user.Mention} you are now in jail for {hours} hours");
+            }
 
             System.Threading.Thread.Sleep(hours * 60 * 60 * 1000);
 

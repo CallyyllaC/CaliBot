@@ -18,7 +18,20 @@ namespace CaliBotCore
             var id = message.Author.Id;
             foreach (var item in Program.Users)
             {
-                if (item.Key == id && item.Value.xpcooldown <= 10)
+                if (item.Value.Id == Program.OwnerID)
+                {
+                    var User = item.Value;
+                    User.xp = User.xp + 5;
+                    var tmp = CheckLevelAsync(User.xp).Result;
+                    if (User.level < tmp)
+                    {
+                        LevelUpAsync(message, User, tmp);
+                        User.level = tmp;
+                    }
+                    await Program.EditUser(User);
+                    return;
+                }
+                else if (item.Key == id && item.Value.xpcooldown <= 10)
                 {
                     var User = item.Value;
                     User.xp++;
@@ -37,7 +50,7 @@ namespace CaliBotCore
 
         private static async void LevelUpAsync(SocketMessage message, User user, int level)
         {
-            SocketTextChannel channel = message.Channel as SocketTextChannel;;
+            SocketTextChannel channel = message.Channel as SocketTextChannel; ;
             if (Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel != 0)
             {
                 channel = Program.Client.GetChannel(Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel) as SocketTextChannel;
@@ -111,7 +124,11 @@ class Currency
     {
         foreach (var item in Program.Users)
         {
-            if (item.Key == id && item.Value.doshCooldown <= 1 && random.Next(5) == 1)
+            if (item.Value.Id == Program.OwnerID)
+            {
+                item.Value.currency++;
+            }
+            if (item.Key == id && item.Value.doshCooldown <= 1 && random.Next(6) == 1)
             {
                 item.Value.currency++;
                 item.Value.doshCooldown++;

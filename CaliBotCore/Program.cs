@@ -219,7 +219,13 @@ namespace CaliBotCore
         {
             try
             {
-                await arg.Guild.DefaultChannel.SendMessageAsync("", false, Embed.GetEmbed(arg.Username, $"Hello! Welcome to {arg.Guild.Name}!", CurrentColour, CurrentName, arg.GetAvatarUrl()));
+                SocketTextChannel channel = arg.Guild.DefaultChannel as SocketTextChannel; ;
+                if (Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel != 0)
+                {
+                    channel = Program.Client.GetChannel(Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel) as SocketTextChannel;
+                }
+
+                await channel.SendMessageAsync("", false, Embed.GetEmbed(arg.Username, $"Hello! Welcome to {arg.Guild.Name}!", CurrentColour, CurrentName, arg.GetAvatarUrl()));
 
                 if (!File.Exists($"{Rootdir}\\Users\\{arg.Id}.json"))
                 {
@@ -515,6 +521,9 @@ namespace CaliBotCore
                 var content = Json.CreateObjectFromString<Ver>(tmpclient.GetStringAsync(link).Result);
                 if (double.Parse(tmp.version) < double.Parse(content.version))
                 {
+                    var tmp2 = new Ver { version = content.version };
+                    Json.CreateJson("Ver", $"{Rootdir}", tmp2);
+
                     foreach (var item in Guilds)
                     {
                         try
@@ -535,8 +544,6 @@ namespace CaliBotCore
                             Log.WriteToLog(exc);
                         }
                     }
-
-                    Json.CreateJson("Ver", $"{Rootdir}", new Ver() { version = content.version });
 
                     string url = $"https://github.com/{Program.OwnerGithub}/{Program.BotRepo}/releases/download/{content.version}/Release.zip";
                     string path = $"Release.zip";

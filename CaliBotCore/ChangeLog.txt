@@ -63,3 +63,9 @@
 		Profile now uses nickname over username
 		Fixed auto update notification not posting
 		Fixed infinite updating
+	February
+		Fixed jail saying "1 hours"
+		Changed appreciateresuhai to have attachment support
+		Fixed box, crop, stretch of image upload
+		Updated All API'snspa
+		Reduced chance of getting currency from 1/4 to 1/5

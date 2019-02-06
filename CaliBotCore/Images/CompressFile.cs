@@ -15,7 +15,7 @@ namespace CaliBotCore.Images
         {
             Process process = new Process();
             process.StartInfo.FileName = gifsicle;
-            process.StartInfo.Arguments = $"−b −O3 -k 256 −−no−extensions {location}";
+            process.StartInfo.Arguments = $"−b --unoptimize --colors 256 --lossy=50 --color-method diversity −O3 −−no−extensions {location}";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.CreateNoWindow = true;
             process.Start();
@@ -30,7 +30,7 @@ namespace CaliBotCore.Images
             var file = await CheckForDupesAndSave(image);
             Process process = new Process();
             process.StartInfo.FileName = gifsicle;
-            process.StartInfo.Arguments = $"−b −O3 -k 256 −−no−extensions {file}";
+            process.StartInfo.Arguments = $"−b --unoptimize --colors 256 --lossy=50 --color-method diversity −O3 −−no−extensions {file}";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.CreateNoWindow = true;
             process.Start();

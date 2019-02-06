@@ -1,11 +1,9 @@
 ﻿using CaliBotCore.DataStructures;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Drawing;
-using SixLabors.ImageSharp.Processing.Text;
-using SixLabors.ImageSharp.Processing.Transforms;
 using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
@@ -59,25 +57,60 @@ namespace CaliBotCore.Images
         private static async Task<byte[]> DrawAsync(ulong id, string UserName, byte[] Avatar)
         {
             using (MemoryStream output = new MemoryStream())
-            using (var overlay = Image.Load($"{Program.Rootdir}\\Users\\Profile\\{id}.png"))
+            using (var overlay = Image.Load($"{Program.Rootdir}\\Users\\Profile\\{id}.gif"))
             {
                 PointF Point1 = new PointF(10, 340);
                 PointF Point2 = new PointF(10, 380);
                 PointF Point3 = new PointF(10, 410);
                 PointF Point4 = new PointF(10, 440);
                 Font font = new Font(fam, 25*fontMultiplier);
+                
                 using (var tmpimg = Image.Load(Avatar))
                 {
                     tmpimg.Mutate(y => y.Resize(175, 175));
-                    overlay.Mutate(x => x
-                        .DrawText(UserName, font, Rgba32.FromHex(hexcol), Point1)
-                        .DrawText("Level: " + level, font, Rgba32.FromHex(hexcol), Point2)
-                        .DrawText("Total XP: " + xp, font, Rgba32.FromHex(hexcol), Point3)
-                        .DrawText("Credits: " + currency, font, Rgba32.FromHex(hexcol), Point4)
-                        .DrawImage(tmpimg, PixelBlenderMode.Atop, 1, new Point(525, 250))
-                    );
+                    try
+                    {
+                        overlay.Mutate(x => x.DrawText(UserName, font, Rgba32.FromHex(hexcol), Point1));
+                    }
+                    catch (Exception)
+                    {
+                        overlay.Mutate(x => x.DrawText("Error", font, Rgba32.FromHex(hexcol), Point1));
+                    }
+                    try
+                    {
+                        overlay.Mutate(x => x.DrawText("Level: " + level, font, Rgba32.FromHex(hexcol), Point2));
+                    }
+                    catch (Exception)
+                    {
+                        overlay.Mutate(x => x.DrawText("Error", font, Rgba32.FromHex(hexcol), Point2));
+                    }
+                    try
+                    {
+                        overlay.Mutate(x => x.DrawText("Total XP: " + xp, font, Rgba32.FromHex(hexcol), Point3));
+                    }
+                    catch (Exception)
+                    {
+                        overlay.Mutate(x => x.DrawText("Error", font, Rgba32.FromHex(hexcol), Point3));
+                    }
+                    try
+                    {
+                        overlay.Mutate(x => x.DrawText("Credits: " + currency, font, Rgba32.FromHex(hexcol), Point4));
+                    }
+                    catch (Exception)
+                    {
+                        overlay.Mutate(x => x.DrawText("Error", font, Rgba32.FromHex(hexcol), Point4));
+                    }
+                    try
+                    {
+                        overlay.Mutate(x => x.DrawImage(tmpimg, new Point(525, 250), PixelColorBlendingMode.Overlay, PixelAlphaCompositionMode.Src, 1));
+                    }
+                    catch (Exception)
+                    {
+                        overlay.Mutate(x => x.DrawText("Error", font, Rgba32.FromHex(hexcol), new Point(525, 250)));
+                    }
                     overlay.SaveAsGif(output);
                 }
+                
                 await Task.CompletedTask;
                 return output.ToArray();
             }

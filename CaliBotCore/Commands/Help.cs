@@ -52,7 +52,7 @@ namespace CaliBotCore.Commands
             var options = new PaginatedAppearanceOptions() { DisplayInformationIcon = false, JumpDisplayOptions = 0 };
             var pages = Pages.AsEnumerable<object>();
 
-            var final = new PaginatedMessage() { Title = $"**{Program.CurrentName} Helper!**", Color = new Color(Program.CurrentColour), Options = options, Pages = pages };
+            var final = new PaginatedMessage() { Title = $"**{Program.CurrentName} Helper!**", Color = new Color(await Program.GetUserColour(Context.Message.Author.Id)), Options = options, Pages = pages };
 
             await PagedReplyAsync(final, false);
         }

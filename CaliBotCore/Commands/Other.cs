@@ -15,9 +15,14 @@ namespace CaliBotCore.Commands
         [Command("appreciateresuhai"), Summary("Appreciate Resuhai")]
         public async Task AppreciateResuhai([Remainder] string input = "")
         {
+            string urls = "";
+            foreach (var item in Context.Message.Attachments)
+            {
+                urls = urls + " " + item.Url;
+            }
             ulong resuhai = 197166960402759680;
             var channel = await Context.Client.GetUser(resuhai).GetOrCreateDMChannelAsync();
-            await channel.SendMessageAsync("", false, Embed.GetEmbed($"**You've got mail!**", $"{Context.Message.Author} has appreciated you!\n\n{input}"));
+            await channel.SendMessageAsync("", false, Embed.GetEmbed($"**You've got mail!**", $"{Context.Message.Author} has appreciated you!\n\n{input} \n {urls}"));
             await ReplyAsync("", false, Embed.GetEmbed($"**Appreciate Resuhai**", "Thankyou for appreciating Resuhai!"));
         }
 
