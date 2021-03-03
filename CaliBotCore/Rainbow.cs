@@ -18,7 +18,7 @@ namespace CaliBotCore
         int i = 0;
         public Rainbow()
         {
-            timer.Interval = 2000;
+            timer.Interval = 60000;
             timer.AutoReset = true;
             timer.Elapsed += Timer_ElapsedAsync;
             timer.Start();
@@ -72,12 +72,13 @@ namespace CaliBotCore
 
         private void Getnewrgb()
         {
-            for (int r = 0; r < 50; r++) colors.Add(new Color(r * 255 / 50, 255, 0));
-            for (int g = 50; g > 0; g--) colors.Add(new Color(255, g * 255 / 50, 0));
-            for (int b = 0; b < 50; b++) colors.Add(new Color(255, 0, b * 255 / 50));
-            for (int r = 50; r > 0; r--) colors.Add(new Color(r * 255 / 50, 0, 255));
-            for (int g = 0; g < 50; g++) colors.Add(new Color(0, g * 255 / 50, 255));
-            for (int b = 50; b > 0; b--) colors.Add(new Color(0, 255, b * 255 / 50));
+            int x = 30;
+            for (int r = 0; r < x; r++) colors.Add(new Color(r * 255 / x, 255, 0));
+            for (int g = x; g > 0; g--) colors.Add(new Color(255, g * 255 / x, 0));
+            for (int b = 0; b < x; b++) colors.Add(new Color(255, 0, b * 255 / x));
+            for (int r = x; r > 0; r--) colors.Add(new Color(r * 255 / x, 0, 255));
+            for (int g = 0; g < x; g++) colors.Add(new Color(0, g * 255 / x, 255));
+            for (int b = x; b > 0; b--) colors.Add(new Color(0, 255, b * 255 / x));
             colors.Add(new Color(0, 255, 0));
         }
 

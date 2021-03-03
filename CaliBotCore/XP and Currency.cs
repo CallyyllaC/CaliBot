@@ -2,6 +2,7 @@
 using CaliBotCore.DataStructures;
 using CaliBotCore.Functions;
 using CaliBotCore.Images;
+using Discord;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,16 @@ namespace CaliBotCore
 {
     class XP
     {
-        public static async void AddXPAsync(SocketMessage message)
+        public static async void AddXPAsync(IMessage message)
         {
             var id = message.Author.Id;
             foreach (var item in Program.Users)
             {
-                if (item.Value.Id == Program.OwnerID)
+                if (item.Key == Program.OwnerID &&  id == Program.OwnerID)
                 {
                     var User = item.Value;
                     User.xp = User.xp + 5;
+                    User.xpcooldown++;
                     var tmp = CheckLevelAsync(User.xp).Result;
                     if (User.level < tmp)
                     {
@@ -47,10 +49,28 @@ namespace CaliBotCore
                 }
             }
         }
-
-        private static async void LevelUpAsync(SocketMessage message, User user, int level)
+        public static async void RemoveXPAsync(IMessage message)
         {
-            SocketTextChannel channel = message.Channel as SocketTextChannel; ;
+            var id = message.Author.Id;
+            foreach (var item in Program.Users)
+            {
+                if (item.Key == Program.OwnerID && id == Program.OwnerID)
+                {
+                    return;
+                }
+                else if (item.Key == id && item.Value.xpcooldown <= 10)
+                {
+                    var User = item.Value;
+                    User.xp--;
+                    User.xpcooldown++;
+                    await Program.EditUser(User);
+                    return;
+                }
+            }
+        }
+        private static async void LevelUpAsync(IMessage message, User user, int level)
+        {
+            SocketTextChannel channel = message.Channel as SocketTextChannel;
             if (Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel != 0)
             {
                 channel = Program.Client.GetChannel(Program.Guilds.GetValueOrDefault(channel.Guild.Id).LevelupChannel) as SocketTextChannel;

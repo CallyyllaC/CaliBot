@@ -73,7 +73,7 @@ namespace CaliBotCore
         private static readonly Timer timermin = new Timer();
 
 
-        static void Main(string[] args) =>new Program().MainAsync().GetAwaiter().GetResult();
+        static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync()
         {
@@ -88,7 +88,7 @@ namespace CaliBotCore
             Client.Log += Log.WriteToLog;
 
             Commands = new CommandService();
-            var Interactive = new InteractiveService(Client); 
+            var Interactive = new InteractiveService(Client);
             Voice = new AudioService();
 
             Services = new ServiceCollection()
@@ -113,11 +113,72 @@ namespace CaliBotCore
             Client.RecipientAdded += Client_RecipientAdded;
 
             Client.MessageReceived += Client_MessageReceived;
+            Client.ReactionAdded += Client_ReactionAdded;
+            Client.ReactionRemoved += Client_ReactionRemoved;
             //add here
 
             await Task.Delay(-1);
         }
 
+        private async Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
+        {
+            var Iusermsg = arg1.Value as IUserMessage;
+            if (Iusermsg.Author.IsBot)
+            {
+                return;
+            }
+
+            var users = Iusermsg.Reactions;
+
+            try
+            {
+                foreach (var item in users.Where(x => x.Key.Name == arg3.Emote.Name))
+                {
+                    if (item.Value.IsMe && arg3.UserId == OwnerID)
+                    {
+                        await Iusermsg.RemoveReactionAsync(arg3.Emote, Client.CurrentUser);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                await Log.WriteToLog(e);
+            }
+
+            XP.RemoveXPAsync(Iusermsg);
+
+            await Task.CompletedTask;
+        }
+
+        private async Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
+        {
+            var Iusermsg = arg1.Value as IUserMessage;
+
+            if (Iusermsg.Author.IsBot)
+            {
+                return;
+            }
+
+            var users = Iusermsg.Reactions;            
+
+            try
+            {
+                foreach (var item in users.Where(x => x.Key.Name == arg3.Emote.Name))
+                {
+                    if (!item.Value.IsMe && arg3.UserId == OwnerID)
+                    {
+                        await Iusermsg.AddReactionAsync(arg3.Emote);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                await Log.WriteToLog(e);
+            }
+
+            XP.AddXPAsync(Iusermsg);
+            await Task.CompletedTask;
+        }
 
         private async Task Client_MessageReceived(SocketMessage arg)
         {
@@ -171,8 +232,8 @@ namespace CaliBotCore
                 }
                 //Profile Stuff
                 Currency.AddCurrencyAsync(user.Id);
-                XP.AddXPAsync(arg);
-                                
+                XP.AddXPAsync(Iusermsg);
+
                 //Commands
                 await HandleCommandAsync(arg);
             }
@@ -452,7 +513,7 @@ namespace CaliBotCore
                     }
                     else if (Bot_Properties.restart == true)
                     {
-                        
+
                         var guild = Client.Guilds.Single(x => x.Id == Bot_Properties.guildId);
                         var channel = guild.Channels.Single(x => x.Id == Bot_Properties.channelId);
                         var chan = channel as SocketTextChannel;
@@ -529,7 +590,7 @@ namespace CaliBotCore
                         try
                         {
                             ulong chanid = 0;
-                            if (item.Value.LevelupChannel !=0 )
+                            if (item.Value.LevelupChannel != 0)
                             {
                                 chanid = item.Value.LevelupChannel;
                             }
@@ -556,7 +617,7 @@ namespace CaliBotCore
                         var contents = client.GetByteArrayAsync(url).Result;
                         File.WriteAllBytes(path, contents);
                     }
-                    
+
 
                     Environment.Exit(60000);
                 }
@@ -615,7 +676,7 @@ namespace CaliBotCore
             Json.CreateJson(id.ToString(), $"{Rootdir}\\Guilds", newGuild);
             await Task.CompletedTask;
         }
-        
+
         //convert time
         public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
